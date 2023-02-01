@@ -151,6 +151,7 @@ int     runhyd(Project *, long *);
 int     nexthyd(Project *, long *);
 void    closehyd(Project *);
 void    setlinkstatus(Project *, int, char, StatusType *, double *);
+void    setlinkintstatus(Project *, int, char, StatusType *, double *);
 void    setlinksetting(Project *, int, double, StatusType *, double *);
 int     tanktimestep(Project *, long *);
 void    getenergy(Project *, int, double *, double *);

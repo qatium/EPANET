@@ -94,7 +94,8 @@ typedef enum {
   EN_PUMP_HCURVE  = 19, //!< Pump head v. flow curve index
   EN_PUMP_ECURVE  = 20, //!< Pump efficiency v. flow curve index
   EN_PUMP_ECOST   = 21, //!< Pump average energy price
-  EN_PUMP_EPAT    = 22  //!< Pump energy price time pattern index
+  EN_PUMP_EPAT    = 22,  //!< Pump energy price time pattern index
+  EN_INTSTATUS    = 23, //!< Current link internal status (see @ref EN_LinkInternalStatusType)
 } EN_LinkProperty;
 
 /// Time parameters
@@ -201,6 +202,27 @@ typedef enum {
   EN_CLOSED       = 0,
   EN_OPEN         = 1
 } EN_LinkStatusType;
+
+/// Internal link status
+/**
+One of these values is returned when @ref EN_getlinkvalue is used to retrieve a link's
+internal status ( \b EN_INTSTATUS ). These options are also used with
+@ref EN_setlinkvalue to set values for these same properties.
+*/
+typedef enum {
+  EN_INTERNAL_XHEAD,         // pump cannot deliver head (closed)
+  EN_INTERNAL_TEMPCLOSED,    // temporarily closed
+  EN_INTERNAL_CLOSED,        // closed
+  EN_INTERNAL_OPEN,          // open
+  EN_INTERNAL_ACTIVE,        // valve active (partially open)
+  EN_INTERNAL_XFLOW,         // pump exceeds maximum flow
+  EN_INTERNAL_XFCV,          // FCV cannot supply flow
+  EN_INTERNAL_XPRESSURE,     // valve cannot supply pressure
+  EN_INTERNAL_FILLING,       // tank filling
+  EN_INTERNAL_EMPTYING,      // tank emptying
+  EN_INTERNAL_OVERFLOWING,    // tank overflowing
+  EN_INTERNAL_MAX
+} EN_LinkInternalStatusType;
 
 /// Pump states
 /**

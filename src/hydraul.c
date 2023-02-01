@@ -415,6 +415,51 @@ void  setlinkstatus(Project *pr, int index, char value, StatusType *s, double *k
 }
 
 
+void  setlinkintstatus(Project *pr, int index, char value, StatusType *s, double *k)
+/*----------------------------------------------------------------
+**  Input:   index  = link index
+**           value  = any of EN_LinkInternalStatusType
+**           s      = pointer to link status
+**           k      = pointer to link setting
+**  Output:  none
+**  Purpose: sets link internal status
+**----------------------------------------------------------------
+*/
+{
+    Network *net = &pr->network;
+
+    Slink *link = &net->Link[index];
+    LinkType t = link->Type;
+
+    // Status set to open
+    if (value == OPEN)
+    {
+        // Adjust link setting for pumps & valves
+        if (t == PUMP)
+        {
+            *k = 1.0;
+            // Check if a re-opened pump needs its flow reset            
+            if (*s == CLOSED) resetpumpflow(pr, index);
+        }
+        if (t > PUMP &&  t != GPV) *k = MISSING;
+        *s = OPEN;
+     }
+     // Status set to closed
+     else if (value == CLOSED)
+     {
+         // Adjust link setting for pumps & valves
+         if (t == PUMP) *k = 0.0;
+         if (t > PUMP && t != GPV) *k = MISSING;
+         *s = CLOSED;
+     }
+     else
+     {
+        if (t == PUMP) *k = 0.0;
+        if (t > PUMP && t != GPV) *k = MISSING;
+        *s = value;
+     }
+}
+
 void  setlinksetting(Project *pr, int index, double value, StatusType *s,
                      double *k)
 /*----------------------------------------------------------------
@@ -1114,4 +1159,3 @@ void resetpumpflow(Project *pr, int i)
     if (pump->Ptype == CONST_HP)
         pr->hydraul.LinkFlow[i] = pump->Q0; 
 }
-

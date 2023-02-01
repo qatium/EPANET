@@ -3685,6 +3685,10 @@ int DLLEXPORT EN_getlinkvalue(EN_Project p, int index, int property, double *val
         else v = 1.0;
         break;
 
+    case EN_INTSTATUS:
+        v = (double)hyd->LinkStatus[index];
+        break;
+
     case EN_SETTING:
         if (Link[index].Type == PIPE || Link[index].Type == CVPIPE)
         {
@@ -3865,6 +3869,21 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
         else
         {
             setlinkstatus(p, index, s, &hyd->LinkStatus[index], &LinkSetting[index]);
+        }
+        break;
+    
+    case EN_INTSTATUS:
+        // Cannot set status for a check valve
+        if (Link[index].Type == CVPIPE) return 207;
+        s = (char)ROUND(value);
+        if (s < 0 || s >= EN_INTERNAL_MAX) return 211;
+        if (property == EN_INITSTATUS)
+        {
+            setlinkintstatus(p, index, s, &Link[index].Status, &Link[index].Kc);
+        }
+        else
+        {
+            setlinkintstatus(p, index, s, &hyd->LinkStatus[index], &LinkSetting[index]);
         }
         break;
 
