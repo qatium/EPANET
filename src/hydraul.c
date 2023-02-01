@@ -454,8 +454,6 @@ void  setlinkintstatus(Project *pr, int index, char value, StatusType *s, double
      }
      else
      {
-        if (t == PUMP) *k = 0.0;
-        if (t > PUMP && t != GPV) *k = MISSING;
         *s = value;
      }
 }
