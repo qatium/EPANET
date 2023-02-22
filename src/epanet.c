@@ -1561,6 +1561,10 @@ int DLLEXPORT EN_settimeparam(EN_Project p, int param, long value)
         time->Pstart = value;
         break;
 
+    case EN_STARTTIME:
+        time->Tstart = value;
+        break;
+
     case EN_REPORTSTEP:
         if (value == 0) return 213;
         time->Rstep = value;
