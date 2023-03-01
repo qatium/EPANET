@@ -5151,6 +5151,9 @@ int DLLEXPORT EN_setcontrol(EN_Project p, int index, int type, int linkIndex,
         else return 202;
         s = link->Kc;
         break;
+    case TCV:
+        if (s == 0.0)  status = CLOSED;
+        break;
     case PIPE:
     case PUMP:
         status = OPEN;
