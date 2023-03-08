@@ -1574,10 +1574,11 @@ typedef struct Project *EN_Project;
   (0 for \b EN_TIMER and  \b EN_TIMEOFDAY controls).
   @param[out] level the action level (tank level, junction pressure, or time in seconds)
   that triggers the control.
+  @param[out] status internal link status.
   @return an error code.
   */
   int  DLLEXPORT EN_getcontrol(EN_Project ph, int index, int *type, int *linkIndex,
-                 double *setting, int *nodeIndex, double *level);
+                 double *setting, int *nodeIndex, double *level, int *status);
 
   /**
   @brief Sets the properties of an existing simple control.
@@ -1590,10 +1591,11 @@ typedef struct Project *EN_Project;
   (0 for \b EN_TIMER and \b EN_TIMEOFDAY controls).
   @param level the action level (tank level, junction pressure, or time in seconds)
   that triggers the control.
+  @param linkStatus link internal status
   @return an error code.
   */
   int  DLLEXPORT EN_setcontrol(EN_Project ph, int index, int type, int linkIndex,
-                 double setting, int nodeIndex, double level);
+                 double setting, int nodeIndex, double level, int linkStatus);
 
 
   /********************************************************************

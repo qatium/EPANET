@@ -744,21 +744,21 @@ int  DLLEXPORT ENdeletecontrol(int index)
 }
 
 int DLLEXPORT ENgetcontrol(int index, int *type, int *linkIndex,
-              EN_API_FLOAT_TYPE *setting, int *nodeIndex, EN_API_FLOAT_TYPE *level)
+              EN_API_FLOAT_TYPE *setting, int *nodeIndex, EN_API_FLOAT_TYPE *level, int *status)
 {
     double setting2 = 0.0, level2 = 0.0;
     int errcode = EN_getcontrol(_defaultProject, index, type, linkIndex, &setting2,
-                                nodeIndex, &level2);
+                                nodeIndex, &level2, status);
     *setting = (EN_API_FLOAT_TYPE)setting2;
     *level = (EN_API_FLOAT_TYPE)level2;
     return errcode;
 }
 
 int DLLEXPORT ENsetcontrol(int index, int type, int linkIndex,
-              EN_API_FLOAT_TYPE setting, int nodeIndex, EN_API_FLOAT_TYPE level)
+              EN_API_FLOAT_TYPE setting, int nodeIndex, EN_API_FLOAT_TYPE level, int linkStatus)
 {
     return EN_setcontrol(_defaultProject, index, type, linkIndex, setting,
-                         nodeIndex, level);
+                         nodeIndex, level, linkStatus);
 }
 
 /********************************************************************

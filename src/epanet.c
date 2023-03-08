@@ -4999,7 +4999,7 @@ int DLLEXPORT EN_deletecontrol(EN_Project p, int index)
 }
 
 int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
-                            double *setting, int *nodeIndex, double *level)
+                            double *setting, int *nodeIndex, double *level, int *status)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
 **  Output:  type = type of control (see EN_ControlType)
@@ -5008,6 +5008,7 @@ int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
 **           nodeIndex = index of node that triggers a level control
 **           level = trigger level that activates the control (pressure for junction nodes,
 **                   water level for tank nodes or time value for time-based control)
+**           status = link internal status
 **  Returns: error code
 **  Purpose: Retrieves the properties of a simple control
 **----------------------------------------------------------------
@@ -5078,11 +5079,12 @@ int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
     }
     *setting = (double)s;
     *level = (double)lvl;
+    *status = (int)control->Status;
     return 0;
 }
 
 int DLLEXPORT EN_setcontrol(EN_Project p, int index, int type, int linkIndex,
-                            double setting, int nodeIndex, double level)
+                            double setting, int nodeIndex, double level, int linkStatus)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
 **           type = type of control (see EN_ControlType)
@@ -5091,6 +5093,7 @@ int DLLEXPORT EN_setcontrol(EN_Project p, int index, int type, int linkIndex,
 **           nodeIndex = index of node that triggers the control (for level controls)
 **           level = trigger level that activates the control (pressure for junction nodes,
 **                   water level for tank nodes or time value for time-based control)
+**           linkStatus = link internal status
 **  Output:  none
 **  Returns: error code
 **  Purpose: Sets the properties of a simple control
@@ -5099,7 +5102,7 @@ int DLLEXPORT EN_setcontrol(EN_Project p, int index, int type, int linkIndex,
 {
     Network *net = &p->network;
 
-    char status = ACTIVE;
+    char status = linkStatus;
     long t = 0;
     double s = setting, lvl = level;
     double *Ucf = p->Ucf;
@@ -5150,9 +5153,6 @@ int DLLEXPORT EN_setcontrol(EN_Project p, int index, int type, int linkIndex,
         else if (s == 1.0) status = OPEN;
         else return 202;
         s = link->Kc;
-        break;
-    case TCV:
-        if (s == 0.0)  status = CLOSED;
         break;
     case PIPE:
     case PUMP:
