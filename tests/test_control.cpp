@@ -82,4 +82,75 @@ BOOST_FIXTURE_TEST_CASE(test_add_get_rule,  FixtureOpenClose)
     BOOST_CHECK(pump9_before - pump9_after == 2);
 }
 
+BOOST_AUTO_TEST_CASE(test_controls_timed_from_until)
+{
+    int type = 0, linkIndex = 0, nodeIndex = 0, controlCount = 0, error = 0;
+    int pumpIndex = 0;
+    double setting = 0.0, level = 0.0, fromTime = 0.0, untilTime = 0.0, pumpSetting = 0.0;
+    long tstep = 0, t = 0;
+
+    EN_Project ph = NULL;
+
+    EN_createproject(&ph);
+    error = EN_open(ph, "./example_controls_from_until.inp", DATA_PATH_RPT, DATA_PATH_OUT);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_getcount(ph, EN_CONTROLCOUNT, &controlCount);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(controlCount == 2);
+
+    error = EN_getcontrol(ph, 1, &type, &linkIndex, &setting, &nodeIndex, &level, &fromTime, &untilTime);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(type == EN_HILEVEL);
+    BOOST_CHECK(abs(level - 0.0) < 0.001);
+    BOOST_CHECK(abs(setting - 0.123) < 0.001);
+    BOOST_CHECK(abs(fromTime - 10.0 * 3600.0) < 0.001);
+    BOOST_CHECK(abs(untilTime - 13.0 * 3600.0) < 0.001);
+
+    error = EN_getcontrol(ph, 2, &type, &linkIndex, &setting, &nodeIndex, &level, &fromTime, &untilTime);
+    BOOST_REQUIRE(error == 0);
+    BOOST_CHECK(type == EN_HILEVEL);
+    BOOST_CHECK(abs(level - 0.0) < 0.001);
+    BOOST_CHECK(abs(setting - 1.0) < 0.001);
+    BOOST_CHECK(abs(fromTime - 14.0 * 3600.0) < 0.001);
+    BOOST_CHECK(abs(untilTime - 23.0 * 3600.0) < 0.001);
+
+    error = EN_getlinkindex(ph, (char *)"335", &pumpIndex);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_openH(ph);
+    BOOST_REQUIRE(error == 0);
+    error = EN_initH(ph, 0);
+    BOOST_REQUIRE(error == 0);
+    do {
+        error = EN_runH(ph, &t);
+        BOOST_REQUIRE(error < 7);
+        
+        error = EN_getlinkvalue(ph, pumpIndex, EN_SETTING, &pumpSetting);
+        BOOST_REQUIRE(error == 0);
+
+        if (t / 3600 == 10 ||
+            t / 3600 == 11 ||
+            t / 3600 == 12 ||
+            t / 3600 == 13)
+        {
+            BOOST_CHECK(abs(pumpSetting - 0.123) < 0.001);
+        }
+        else
+        {
+            BOOST_CHECK(abs(pumpSetting - 1.0) < 0.001);
+        }
+
+        error = EN_nextH(ph, &tstep);
+        BOOST_REQUIRE(error == 0);
+    } while (tstep > 0);
+
+    error = EN_closeH(ph);
+    BOOST_REQUIRE(error == 0);
+
+    error = EN_close(ph);
+    BOOST_REQUIRE(error == 0);
+    EN_deleteproject(ph);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -16,6 +16,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <limits.h>
 
 #include "epanet2_2.h"
 #include "types.h"
@@ -4944,6 +4945,8 @@ int DLLEXPORT EN_addcontrol(EN_Project p, int type, int linkIndex, double settin
     control->Setting = s;
     control->Grade = lvl;
     control->Time = t;
+    control->FromTime = 0;
+    control->UntilTime = LONG_MAX;
 
     // Update number of controls
     net->Ncontrols = n;
@@ -4976,7 +4979,8 @@ int DLLEXPORT EN_deletecontrol(EN_Project p, int index)
 }
 
 int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
-                            double *setting, int *nodeIndex, double *level)
+                            double *setting, int *nodeIndex, double *level,
+                            double *fromTime, double *untilTime)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
 **  Output:  type = type of control (see EN_ControlType)
@@ -4985,6 +4989,8 @@ int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
 **           nodeIndex = index of node that triggers a level control
 **           level = trigger level that activates the control (pressure for junction nodes,
 **                   water level for tank nodes or time value for time-based control)
+**           fromTime = 
+**           untilTime = 
 **  Returns: error code
 **  Purpose: Retrieves the properties of a simple control
 **----------------------------------------------------------------
@@ -5055,6 +5061,8 @@ int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
     }
     *setting = (double)s;
     *level = (double)lvl;
+    *fromTime = (double)control->FromTime;
+    *untilTime = (double)control->UntilTime;
     return 0;
 }
 
@@ -5151,6 +5159,8 @@ int DLLEXPORT EN_setcontrol(EN_Project p, int index, int type, int linkIndex,
     control->Setting = s;
     control->Grade = lvl;
     control->Time = t;
+    control->FromTime = 0;
+    control->UntilTime = LONG_MAX;
     return 0;
 }
 

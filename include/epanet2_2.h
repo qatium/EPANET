@@ -1577,7 +1577,8 @@ typedef struct Project *EN_Project;
   @return an error code.
   */
   int  DLLEXPORT EN_getcontrol(EN_Project ph, int index, int *type, int *linkIndex,
-                 double *setting, int *nodeIndex, double *level);
+                 double *setting, int *nodeIndex, double *level, double *fromTime,
+                 double *untilTime);
 
   /**
   @brief Sets the properties of an existing simple control.

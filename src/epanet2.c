@@ -744,13 +744,16 @@ int  DLLEXPORT ENdeletecontrol(int index)
 }
 
 int DLLEXPORT ENgetcontrol(int index, int *type, int *linkIndex,
-              EN_API_FLOAT_TYPE *setting, int *nodeIndex, EN_API_FLOAT_TYPE *level)
+              EN_API_FLOAT_TYPE *setting, int *nodeIndex, EN_API_FLOAT_TYPE *level,
+              EN_API_FLOAT_TYPE *fromTime, EN_API_FLOAT_TYPE *untilTime)
 {
-    double setting2 = 0.0, level2 = 0.0;
+    double setting2 = 0.0, level2 = 0.0, fromTime2 = 0.0, untilTime2 = 0.0;
     int errcode = EN_getcontrol(_defaultProject, index, type, linkIndex, &setting2,
-                                nodeIndex, &level2);
+                                nodeIndex, &level2, &fromTime2, &untilTime2);
     *setting = (EN_API_FLOAT_TYPE)setting2;
     *level = (EN_API_FLOAT_TYPE)level2;
+    *fromTime = (EN_API_FLOAT_TYPE)fromTime2;
+    *untilTime = (EN_API_FLOAT_TYPE)untilTime2;
     return errcode;
 }
 

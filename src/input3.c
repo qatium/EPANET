@@ -15,6 +15,7 @@ Last Updated: 11/29/2019
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -839,7 +840,7 @@ int controldata(Project *pr)
                  time = 0.0,           // Simulation time
                  level = 0.0,          // Pressure or tank level
                  fromTime = 0.0,
-                 untilTime = pr->times.Dur;
+                 untilTime = 0.0;
     StatusType   status = ACTIVE;      // Link status
     ControlType  ctltype;              // Control type
     LinkType     linktype;             // Link type
@@ -912,9 +913,8 @@ int controldata(Project *pr)
           break;
     }
 
-    if (ctltype == HILEVEL || ctltype == LOWLEVEL)
+    if ((ctltype == HILEVEL || ctltype == LOWLEVEL) && n == 14)
     {
-        if (n > 8 && n != 14) return setError(parser, 8, 202);
         if (!getfloat(parser->Tok[10], &fromTime)) return setError(parser, 10, 202);
         if (!getfloat(parser->Tok[13], &untilTime)) return setError(parser, 13, 202);
     }
@@ -930,7 +930,7 @@ int controldata(Project *pr)
     control->Setting = setting;
     control->Time = (long)(3600.0 * time);
     control->FromTime = (long)(3600.0 * fromTime);
-    control->UntilTime = (long)(3600.0 * untilTime);
+    control->UntilTime = (long)untilTime == 0 ? LONG_MAX-1 : (long)(3600.0 * untilTime);
     if (ctltype == TIMEOFDAY) control->Time %= SECperDAY;
     control->Grade = level;
     return 0;

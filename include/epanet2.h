@@ -374,7 +374,8 @@ extern "C" {
   int DLLEXPORT ENdeletecontrol(int index);
 
   int DLLEXPORT ENgetcontrol(int index, int *type, int *linkIndex,
-                EN_API_FLOAT_TYPE *setting, int *nodeIndex, EN_API_FLOAT_TYPE *level);
+                EN_API_FLOAT_TYPE *setting, int *nodeIndex, EN_API_FLOAT_TYPE *level,
+                EN_API_FLOAT_TYPE *fromTime, EN_API_FLOAT_TYPE *untilTime);
 
   int DLLEXPORT ENsetcontrol(int index, int type, int linkIndex,
                 EN_API_FLOAT_TYPE setting, int nodeIndex, EN_API_FLOAT_TYPE level);
