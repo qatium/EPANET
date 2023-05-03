@@ -816,17 +816,17 @@ int demanddata(Project *pr)
 
 int controldata(Project *pr)
 /*
-**--------------------------------------------------------------
+**----------------------------------------------------------------------------------------------------------
 **  Input:   none
 **  Output:  returns error code
 **  Purpose: processes simple controls
 **  Formats:
 **  [CONTROLS]
-**  LINK  linkID  setting IF NODE      nodeID {BELOW/ABOVE}  level
+**  LINK  linkID  setting IF NODE      nodeID {BELOW/ABOVE}  level  FROM  TIME  value  UNTIL  TIME  value
 **  LINK  linkID  setting AT TIME      value  (units)
 **  LINK  linkID  setting AT CLOCKTIME value  (units)
-**   (0)   (1)      (2)   (3) (4)       (5)     (6)          (7)
-**--------------------------------------------------------------
+**   (0)   (1)      (2)   (3) (4)       (5)     (6)          (7)    (8)   (9)   (10)   (11)   (12)  (13)
+**----------------------------------------------------------------------------------------------------------
 */
 {
     Network *net = &pr->network;
@@ -837,7 +837,9 @@ int controldata(Project *pr)
                  n;                    // # data items
     double       setting = MISSING,    // Link setting
                  time = 0.0,           // Simulation time
-                 level = 0.0;          // Pressure or tank level
+                 level = 0.0,          // Pressure or tank level
+                 fromTime = 0.0,
+                 untilTime = pr->times.Dur;
     StatusType   status = ACTIVE;      // Link status
     ControlType  ctltype;              // Control type
     LinkType     linktype;             // Link type
@@ -910,6 +912,13 @@ int controldata(Project *pr)
           break;
     }
 
+    if (ctltype == HILEVEL || ctltype == LOWLEVEL)
+    {
+        if (n > 8 && n != 14) return setError(parser, 8, 202);
+        if (!getfloat(parser->Tok[10], &fromTime)) return setError(parser, 10, 202);
+        if (!getfloat(parser->Tok[13], &untilTime)) return setError(parser, 13, 202);
+    }
+
     // Fill in fields of control data structure
     net->Ncontrols++;
     if (net->Ncontrols > parser->MaxControls) return 200;
@@ -920,6 +929,8 @@ int controldata(Project *pr)
     control->Status = status;
     control->Setting = setting;
     control->Time = (long)(3600.0 * time);
+    control->FromTime = (long)(3600.0 * fromTime);
+    control->UntilTime = (long)(3600.0 * untilTime);
     if (ctltype == TIMEOFDAY) control->Time %= SECperDAY;
     control->Grade = level;
     return 0;

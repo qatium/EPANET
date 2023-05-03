@@ -573,8 +573,21 @@ int  controls(Project *pr)
             vplus = ABS(hyd->NodeDemand[n]);
             v1 = tankvolume(pr,n - net->Njuncs,h);
             v2 = tankvolume(pr,n - net->Njuncs, control->Grade);
-            if (control->Type == LOWLEVEL && v1 <= v2 + vplus) reset = 1;
-            if (control->Type == HILEVEL && v1 >= v2 - vplus)  reset = 1;
+            if (control->Type == LOWLEVEL &&
+                v1 <= v2 + vplus &&
+                time->Htime >= control->FromTime &&
+                time->Htime < control->UntilTime)
+            {
+                reset = 1;
+            }
+
+            if (control->Type == HILEVEL &&
+                v1 >= v2 - vplus &&
+                time->Htime >= control->FromTime &&
+                time->Htime < control->UntilTime)
+            {
+                reset = 1;
+            }
         }
 
         // Link is time-controlled
@@ -1114,4 +1127,3 @@ void resetpumpflow(Project *pr, int i)
     if (pump->Ptype == CONST_HP)
         pr->hydraul.LinkFlow[i] = pump->Q0; 
 }
-

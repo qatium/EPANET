@@ -460,6 +460,8 @@ typedef struct             // Control Statement
     int         Link;      // link index
     int         Node;      // control node index
     long        Time;      // control time
+    long        FromTime;  // control time
+    long        UntilTime;    // control time
     double      Grade;     // control grade
     double      Setting;   // new link setting
     StatusType  Status;    // new link status
