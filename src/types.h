@@ -748,7 +748,8 @@ typedef struct {
 
   StatusType
     *LinkStatus,           // Link status
-    *OldStatus;            // Previous link/tank status
+    *OldStatus,            // Previous link/tank status
+    *InitialStatus;        // Initial Status for links
 
   Smatrix smatrix;         // Sparse matrix storage
 

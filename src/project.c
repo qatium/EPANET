@@ -250,6 +250,7 @@ void initpointers(Project *pr)
     pr->hydraul.LinkStatus = NULL;
     pr->hydraul.LinkSetting = NULL;
     pr->hydraul.OldStatus = NULL;
+    pr->hydraul.InitialStatus = NULL;
     pr->hydraul.P = NULL;
     pr->hydraul.Y = NULL;
     pr->hydraul.Xflow = NULL;

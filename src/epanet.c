@@ -3690,7 +3690,7 @@ int DLLEXPORT EN_getlinkvalue(EN_Project p, int index, int property, double *val
         break;
 
     case EN_INTERNAL_STATUS:
-        v = (double)hyd->OldStatus[index];
+        v = (double)hyd->InitialStatus[index];
         break;
 
     case EN_SETTING:

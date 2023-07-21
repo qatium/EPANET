@@ -151,6 +151,7 @@ void inithyd(Project *pr, int initflag)
 
         // Save initial status
         hyd->OldStatus[i] = hyd->LinkStatus[i];
+        hyd->InitialStatus[i] = hyd->LinkStatus[i];
     }
 
     // Initialize pump energy usage
@@ -311,12 +312,15 @@ int  allocmatrix(Project *pr)
                                    sizeof(double));
     hyd->OldStatus = (StatusType *) calloc(net->Nlinks+net->Ntanks+1,
                                            sizeof(StatusType));
+    hyd->InitialStatus = (StatusType *) calloc(net->Nlinks+1,
+                                           sizeof(StatusType));
     ERRCODE(MEMCHECK(hyd->P));
     ERRCODE(MEMCHECK(hyd->Y));
     ERRCODE(MEMCHECK(hyd->DemandFlow));
     ERRCODE(MEMCHECK(hyd->EmitterFlow));
     ERRCODE(MEMCHECK(hyd->Xflow));
     ERRCODE(MEMCHECK(hyd->OldStatus));
+    ERRCODE(MEMCHECK(hyd->InitialStatus));
     return errcode;
 }
 
@@ -338,6 +342,7 @@ void  freematrix(Project *pr)
     free(hyd->EmitterFlow);
     free(hyd->Xflow);
     free(hyd->OldStatus);
+    free(hyd->InitialStatus);
 }
 
 
@@ -652,6 +657,7 @@ int  controls(Project *pr)
             if (s1 != s2 || k1 != k2)
             {
                 hyd->LinkStatus[k] = s2;
+                hyd->InitialStatus[k] = s2;
                 hyd->LinkSetting[k] = k2;
                 if (pr->report.Statflag) writecontrolaction(pr,k,i);
                 setsum++;
