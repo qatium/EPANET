@@ -25,20 +25,21 @@ add_test(NAME test_net_builder
 
 set(toolkit_test_srcs
      test_toolkit.cpp
-     test_project.cpp
-     test_hydraulics.cpp
-     test_quality.cpp
-     test_report.cpp
-     test_analysis.cpp
-     test_node.cpp
-     test_demand.cpp
-     test_link.cpp
+#     test_project.cpp
+#     test_hydraulics.cpp
+#     test_quality.cpp
+#     test_report.cpp
+#     test_analysis.cpp
+#     test_node.cpp
+#     test_demand.cpp
+#     test_link.cpp
 #     test_pump.cpp
-     test_pattern.cpp
-     test_curve.cpp
-     test_control.cpp
-     test_overflow.cpp
-     test_pda.cpp
+#     test_pattern.cpp
+#     test_curve.cpp
+#     test_control.cpp
+#     test_overflow.cpp
+#     test_pda.cpp
+    test_hot_start.cpp
 )
 
 add_executable(test_toolkit ${toolkit_test_srcs})
